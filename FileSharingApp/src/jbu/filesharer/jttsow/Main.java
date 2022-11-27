@@ -1,5 +1,6 @@
 package jbu.filesharer.jttsow;
 
+import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Scanner;
@@ -7,6 +8,7 @@ import java.util.Scanner;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 class Main {
@@ -66,8 +68,22 @@ class LogInScreen extends JFrame implements ActionListener{
 	private JLabel usernameLabel;
 	private JLabel passwordLabel;
 	private JTextField usernameField;
-	private JTextField passwordField;
+	private JPasswordField  passwordField;
 	
+	public LogInScreen() {
+		GridBagConstraints layoutConst = null;
+		
+		setTitle("FileSharer: Log-in");
+		
+		usernameLabel = new JLabel("Username:");
+		passwordLabel = new JLabel("Password:");
+		
+		usernameField = new JTextField(15);
+		usernameField.setEditable(true);
+		
+		passwordField = new JPasswordField(15);
+		passwordField.setEditable(true);
+	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
