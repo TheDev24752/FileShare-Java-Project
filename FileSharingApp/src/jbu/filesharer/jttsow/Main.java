@@ -83,12 +83,13 @@ class LogInScreen extends JFrame implements ActionListener{
 		
 		passwordField = new JPasswordField(15);
 		passwordField.setEditable(true);
+		
+		System.out.println("test");
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		System.out.println("hi");
+		
 	}
 	
 }
