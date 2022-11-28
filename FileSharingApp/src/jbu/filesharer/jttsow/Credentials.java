@@ -43,30 +43,27 @@ public class Credentials {
 			File myObj = new File(credentialsDB);
 			Scanner myReader = new Scanner(myObj);
 			
-			System.out.println(name);
-
 			// Reading each line and splitting the data and storing it into an array
 			while (myReader.hasNextLine()) {
 				// itemize the data
 				String data = myReader.nextLine();
 				String[] arrOfStr = data.split("/", 3);
 				
-				System.out.println(arrOfStr[1]);
-				System.out.println(!arrOfStr[0].equals(name));
+				System.out.println(arrOfStr[1].equals(password));
+				System.out.println(arrOfStr[0].equals(name));
 				
 				// check if the user's input matches an entry in the database; will skip if the data is wrong
 				//int acct_pwd = Integer.parseInt(arrOfStr[1]);
 				if (!arrOfStr[0].equals(name) || !arrOfStr[1].equals(password)) {
 					System.out.println("In the check.");
-					continue;
+				} else {
+					// build the Credentials object; user found
+					user = new Credentials(arrOfStr[0], arrOfStr[1], arrOfStr[2]);
+					myReader.close();
+				
+					System.out.println("Found!!" + arrOfStr[0]+ arrOfStr[1]+ arrOfStr[2]);
+					return true;
 				}
-				
-				// build the Credentials object; user found
-				user = new Credentials(arrOfStr[0], arrOfStr[1], arrOfStr[2]);
-				myReader.close();
-				
-				System.out.println("Found!!" + arrOfStr[0]+ arrOfStr[1]+ arrOfStr[2]);
-				return true;
 			}
 			System.out.println("The entered username or password is wrong; try again.");
 			myReader.close();
@@ -162,8 +159,8 @@ class LogInScreen extends JFrame implements ActionListener{
 		String username;
 		String password;
 		
-		username = usernameField.getName();
-		password = passwordField.getName();
+		username = usernameField.getText();
+		password = String.valueOf(passwordField.getPassword());
 		if (source.equals(logInButton)) {
 			loggedIn = Credentials.loadCredentials(username, password);
 		} else if (source.equals(signUpButton)) {

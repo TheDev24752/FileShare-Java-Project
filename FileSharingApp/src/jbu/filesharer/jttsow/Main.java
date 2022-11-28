@@ -29,16 +29,9 @@ public class Main {
 			firstName = ask("what is your first name?", scnr);
 			String lastName = ask("what is your last name?", scnr);
 			String password = ask("what is your password?", scnr);
-			int pwdInt;
 			
-			try {
-				pwdInt = Integer.parseInt(password);
-			} catch (Exception e) {
-				System.out.println("please enter a number.");
-				continue;
-			}
 			
-			loggedIn = Credentials.loadCredentials(firstName, lastName, pwdInt);
+			loggedIn = Credentials.loadCredentials(firstName, password);
 		} while (!loggedIn);
 	    System.out.println("Yay!!! You're logged in.");
 		System.out.println("your email is: " + Credentials.user.email);
