@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,39 +20,6 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-class UploadFile { 
-	final static String fileDBPath = "M:\\FA2022\\Java\\Project\\ServerSideDatabase\\Files";
-	private String fileName;
-	private long id;
-	private String uploader;
-	
-	public UploadFile(String uploader, String path) throws IOException {
-		this.uploader = uploader;
-		String[] fileNameParts = path.split("\\\\");
-		this.fileName = fileNameParts[fileNameParts.length - 1];
-		
-		File toUpload = new File(path);
-		File uploaded = new File(fileDBPath + "\\" + fileName);
-		System.out.println(uploaded.getAbsolutePath());
-		InputStream is = null;
-	    OutputStream os = null;
-	    try {
-	        is = new FileInputStream(toUpload);
-	        os = new FileOutputStream(uploaded);
-	        byte[] buffer = new byte[1024];
-	        int length;
-	        while ((length = is.read(buffer)) > 0) {
-	            os.write(buffer, 0, length);
-	        }
-	    } finally {
-	        is.close();
-	        os.close();
-	    } 
-		
-	}
-	
-}  
-
 class UploadScreen extends JFrame implements ActionListener {
 	private JButton selectButton;
 	private JButton uploadButton;
@@ -62,8 +30,10 @@ class UploadScreen extends JFrame implements ActionListener {
 	private JTextField nameField;
 	private JTextField sizeField;
 	private JTextArea descField;
+	
 	private File selectedFile;
 	private String uploaderName;
+	final static String fileDBPath = "M:\\FA2022\\Java\\Project\\ServerSideDatabase\\Files";
 	
 	public UploadScreen(String uploaderName) {
 		this.uploaderName = uploaderName;
@@ -176,13 +146,53 @@ class UploadScreen extends JFrame implements ActionListener {
 			
 		} else if (source.equals(uploadButton)) {
 			try {
-				UploadFile upFile = new UploadFile(uploaderName, selectedFile.getAbsolutePath());
+				// TODO regex banned characters. use https://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html
+				uploadFile(uploaderName, nameField.getText());
 				// TODO reload main screen
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 		}
 		
+	}
+	
+	public void uploadFile(String uploader, String newName) throws IOException {
+		String newPath = fileDBPath + "\\" + uploader + "-" + newName;
+		
+		// upload the file itself
+		File toUpload = new File(selectedFile.getAbsolutePath());
+		File uploaded = new File(newPath);
+		upload(toUpload, uploaded); 
+		
+		// upload the metadata file
+		File metadata = new File(newPath + ".meta");
+		OutputStream ms = new FileOutputStream(metadata);
+		String metadataInfo = 
+				newName + "\r\n" +
+				uploader + "\r\n" +
+				sizeField.getText() + "\r\n" +
+				descField.getText();
+		ms.write(metadataInfo.getBytes());
+		ms.close();
+	}
+
+	private void upload(File toUpload, File uploaded) throws FileNotFoundException, IOException {
+		InputStream is = null;
+	    OutputStream os = null;
+	    
+	    try {
+	        is = new FileInputStream(toUpload);
+	        os = new FileOutputStream(uploaded);
+	        byte[] buffer = new byte[1024];
+	        int length;
+	        while ((length = is.read(buffer)) > 0) {
+	            os.write(buffer, 0, length);
+	        }
+	    } finally {
+	        is.close();
+	        os.close();
+	    }
+	    
 	}
 	
 }
