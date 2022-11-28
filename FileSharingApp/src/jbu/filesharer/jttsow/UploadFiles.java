@@ -132,7 +132,7 @@ class UploadScreen extends JFrame implements ActionListener {
 			
 			if (response == JFileChooser.APPROVE_OPTION)
             {
-                // set the label to the path of the selected file
+                // set the field to the path of the selected file
 				selectedFile = j.getSelectedFile();
                 fileField.setText(selectedFile.getAbsolutePath());
                 
@@ -148,7 +148,12 @@ class UploadScreen extends JFrame implements ActionListener {
 			try {
 				// TODO regex banned characters. use https://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html
 				uploadFile(uploaderName, nameField.getText());
-				// TODO reload main screen
+				
+				MainScreen wScreen = new MainScreen(uploaderName);
+				wScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				wScreen.pack();
+				wScreen.setVisible(true);
+				dispose();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
