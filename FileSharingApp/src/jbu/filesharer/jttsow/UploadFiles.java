@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -179,11 +180,11 @@ class UploadScreen extends JFrame implements ActionListener {
 				sizeField.getText() + "\r\n" +
 				descField.getText();
 		ms.write(metadataInfo.getBytes());
+		ms.close();
 		
 		File userData = new File(userDBPath + "\\" + uploaderName + ".DAT");
-		ms = new FileOutputStream(userData);
-		
-		ms.close();
+		int fileValue = (int) (Integer.parseInt(sizeField.getText()) * 0.001); //1 cent per kB
+		addMoney(userData, fileValue);
 	}
 
 	private void upload(File toUpload, File uploaded) throws FileNotFoundException, IOException {
@@ -205,4 +206,12 @@ class UploadScreen extends JFrame implements ActionListener {
 	    
 	}
 	
+	private void addMoney(File data, int increase) throws FileNotFoundException {
+		Scanner dataIn = new Scanner(data);
+		FileOutputStream dataOut = new FileOutputStream(data);
+		
+		String balance = dataIn.nextLine();
+		System.out.println(balance);
+		
+	}
 }

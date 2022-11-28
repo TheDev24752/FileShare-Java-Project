@@ -12,6 +12,7 @@ import java.util.Scanner;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
@@ -163,6 +164,15 @@ class LogInScreen extends JFrame implements ActionListener{
 		password = String.valueOf(passwordField.getPassword());
 		if (source.equals(logInButton)) {
 			loggedIn = Credentials.loadCredentials(username, password);
+			if (loggedIn) {
+				MainScreen wScreen = new MainScreen(username);
+				wScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				wScreen.pack();
+				wScreen.setVisible(true);
+				dispose();
+			} else {
+				JOptionPane.showMessageDialog(this, "The username or password is incorrect.", "login", JOptionPane.WARNING_MESSAGE);
+			}
 		} else if (source.equals(signUpButton)) {
 			
 		}

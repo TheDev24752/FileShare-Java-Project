@@ -1,18 +1,15 @@
 package jbu.filesharer.jttsow;
 
-import java.util.Scanner;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 public class Main {
 	// TODO get UI to do the path stuff
@@ -51,6 +48,7 @@ public class Main {
 }
 
 class MainScreen extends JFrame implements ActionListener {
+	private static final long serialVersionUID = -7176658742178092819L;
 	private JButton upButton;
 	private JButton downButton;
 	private JButton exitButton;
