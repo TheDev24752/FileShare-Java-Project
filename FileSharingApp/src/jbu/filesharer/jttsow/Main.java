@@ -43,12 +43,10 @@ class Main {
 	    while (true) {
 			String upDown = ask("What do you want to do? (up/down/exit)", scnr);
 			if (upDown.equals("up")) {
-				filePath = ask("Enter the path of the file:", scnr);
-				try {
-					UploadFile upFile = new UploadFile(firstName, filePath);
-				} catch (Exception e) {
-					System.out.println(e);
-				}
+				UploadScreen uscreen = new UploadScreen(firstName);
+				uscreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				uscreen.pack();
+				uscreen.setVisible(true);
 			} else if (upDown.equals("exit")) {
 				System.exit(-1);
 			}
