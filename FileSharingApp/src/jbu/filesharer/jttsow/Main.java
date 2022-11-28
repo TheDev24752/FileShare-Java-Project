@@ -29,16 +29,9 @@ public class Main {
 			firstName = ask("what is your first name?", scnr);
 			String lastName = ask("what is your last name?", scnr);
 			String password = ask("what is your password?", scnr);
-			int pwdInt;
 			
-			try {
-				pwdInt = Integer.parseInt(password);
-			} catch (Exception e) {
-				System.out.println("please enter a number.");
-				continue;
-			}
 			
-			loggedIn = Credentials.loadCredentials(firstName, lastName, pwdInt);
+			loggedIn = Credentials.loadCredentials(firstName, password);
 		} while (!loggedIn);
 	    System.out.println("Yay!!! You're logged in.");
 		System.out.println("your email is: " + Credentials.user.email);
@@ -48,17 +41,6 @@ public class Main {
 		wScreen.pack();
 		wScreen.setVisible(true);
 		
-	    while (true) {
-			String upDown = ask("What do you want to do? (up/down/exit)", scnr);
-			if (upDown.equals("up")) {
-				UploadScreen uscreen = new UploadScreen(firstName);
-				uscreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				uscreen.pack();
-				uscreen.setVisible(true);
-			} else if (upDown.equals("exit")) {
-				System.exit(-1);
-			}
-		}
 	}
 	
 	public static String ask(String q, Scanner scan) {
@@ -125,10 +107,10 @@ class MainScreen extends JFrame implements ActionListener {
 		Object source = e.getSource();
 		
 		if (source.equals(upButton)) {
-			UploadScreen uscreen = new UploadScreen(firstName);
-			uscreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			uscreen.pack();
-			uscreen.setVisible(true);
+			UploadScreen uScreen = new UploadScreen(firstName);
+			uScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			uScreen.pack();
+			uScreen.setVisible(true);
 			dispose();
 		} else if (source.equals(downButton)) {
 			

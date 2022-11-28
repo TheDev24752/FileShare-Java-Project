@@ -34,6 +34,7 @@ class UploadScreen extends JFrame implements ActionListener {
 	private File selectedFile;
 	private String uploaderName;
 	final static String fileDBPath = "M:\\FA2022\\Java\\Project\\ServerSideDatabase\\Files";
+	final static String userDBPath = "M:\\FA2022\\Java\\Project\\ServerSideDatabase\\Users";
 	
 	public UploadScreen(String uploaderName) {
 		this.uploaderName = uploaderName;
@@ -147,7 +148,7 @@ class UploadScreen extends JFrame implements ActionListener {
 		} else if (source.equals(uploadButton)) {
 			try {
 				// TODO regex banned characters. use https://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html
-				uploadFile(uploaderName, nameField.getText());
+				uploadFile(uploaderName, nameField.getText());				
 				
 				MainScreen wScreen = new MainScreen(uploaderName);
 				wScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -178,6 +179,10 @@ class UploadScreen extends JFrame implements ActionListener {
 				sizeField.getText() + "\r\n" +
 				descField.getText();
 		ms.write(metadataInfo.getBytes());
+		
+		File userData = new File(userDBPath + "\\" + uploaderName + ".DAT");
+		ms = new FileOutputStream(userData);
+		
 		ms.close();
 	}
 
