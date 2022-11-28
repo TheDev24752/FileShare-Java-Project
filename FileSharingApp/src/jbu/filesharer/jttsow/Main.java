@@ -1,9 +1,9 @@
 package jbu.filesharer.jttsow;
 
+import java.util.Scanner;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-class Main {
+public class Main {
 	// TODO get UI to do the path stuff
 	static String filePath;
 	final static String testFile = "F:\\smile.bmp";
@@ -58,36 +58,4 @@ class Main {
 		return scan.nextLine();
 	}
 
-}
-
-class LogInScreen extends JFrame implements ActionListener{
-	private JButton attemptLogIn;
-	private JButton signUp;
-	private JLabel usernameLabel;
-	private JLabel passwordLabel;
-	private JTextField usernameField;
-	private JPasswordField  passwordField;
-	
-	public LogInScreen() {
-		GridBagConstraints layoutConst = null;
-		
-		setTitle("FileSharer: Log-in");
-		
-		usernameLabel = new JLabel("Username:");
-		passwordLabel = new JLabel("Password:");
-		
-		usernameField = new JTextField(15);
-		usernameField.setEditable(true);
-		
-		passwordField = new JPasswordField(15);
-		passwordField.setEditable(true);
-		
-		System.out.println("test");
-	}
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-	}
-	
 }
