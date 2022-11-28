@@ -16,52 +16,54 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 public class Credentials {
-	final static String credentialsDB = "M:\\FA2022\\Java\\Project\\ServerSideDatabase\\credentials.txt";
+	final static String credentialsDB = "M:\\JAVA PROJECTS\\FileShare-Java-Project\\ServerSideDatabase\\Credentials.txt";
 	String name;
-	String lastName;
-	int password;
+	String password;
 	String email;
 	public static Credentials user;
 
 	// Default Constructor
 	public Credentials() {
 		this.name = "";
-		this.lastName = "";
-		this.password = 0;
+		this.password = "";
 		this.email = "";
 	}
 
 	// Constructor
-	public Credentials(String name, String lastName, int password, String email) {
+	public Credentials(String name, String password, String email) {
 		this.name = name;
-		this.lastName = lastName;
 		this.password = password;
 		this.email = email;
 	}
 
   //Log in function
-	static boolean loadCredentials(String name, String lastName, int password) {
+	static boolean loadCredentials(String name, String password) {
 		try {
-			// Opening and Reading the the file that contains the members' data
+			// Opening and Reading the file that contains the members' data
 			File myObj = new File(credentialsDB);
 			Scanner myReader = new Scanner(myObj);
-
-			// Reading each line and spliting the data and storing it into an array
+			
+			// Reading each line and splitting the data and storing it into an array
 			while (myReader.hasNextLine()) {
 				// itemize the data
 				String data = myReader.nextLine();
-				String[] arrOfStr = data.split("/", 4);
+				String[] arrOfStr = data.split("/", 3);
+				
+				System.out.println(arrOfStr[1].equals(password));
+				System.out.println(arrOfStr[0].equals(name));
 				
 				// check if the user's input matches an entry in the database; will skip if the data is wrong
-				int acct_pwd = Integer.parseInt(arrOfStr[2]);
-				if (!arrOfStr[0].equals(name) || !arrOfStr[1].equals(lastName) || acct_pwd != password) {
-					continue;
-				}
+				//int acct_pwd = Integer.parseInt(arrOfStr[1]);
+				if (!arrOfStr[0].equals(name) || !arrOfStr[1].equals(password)) {
+					System.out.println("In the check.");
+				} else {
+					// build the Credentials object; user found
+					user = new Credentials(arrOfStr[0], arrOfStr[1], arrOfStr[2]);
+					myReader.close();
 				
-				// build the Credentials object; user found
-				user = new Credentials(arrOfStr[0], arrOfStr[1], acct_pwd, arrOfStr[3]);
-				myReader.close();
-				return true;
+					System.out.println("Found!!" + arrOfStr[0]+ arrOfStr[1]+ arrOfStr[2]);
+					return true;
+				}
 			}
 			System.out.println("The entered username or password is wrong; try again.");
 			myReader.close();
@@ -152,12 +154,19 @@ class LogInScreen extends JFrame implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		// TODO Auto-generated method stub
+		Object source = event.getSource();
+		boolean loggedIn = false;
 		String username;
 		String password;
 		
-		username = usernameField.getName();
-		password = passwordField.getName();
+		username = usernameField.getText();
+		password = String.valueOf(passwordField.getPassword());
+		if (source.equals(logInButton)) {
+			loggedIn = Credentials.loadCredentials(username, password);
+		} else if (source.equals(signUpButton)) {
+			
+		}
+		
 	}
 	
 	public static void main(String[] args) {
