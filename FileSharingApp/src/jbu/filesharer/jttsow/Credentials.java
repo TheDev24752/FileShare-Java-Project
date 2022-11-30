@@ -17,8 +17,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 public class Credentials {
-	//final static String credentialsDBSalome = "M:\\JAVA PROJECTS\\FileShare-Java-Project\\ServerSideDatabase\\Credentials.txt";
-	final static String credentialsDBJaedon = "M:\\FA2022\\Java\\Project\\ServerSideDatabase\\Credentials.txt";
+	final static String credentialsDB = "..\\ServerSideDatabase\\Credentials.txt";
 	String name;
 	String password;
 	String email;
@@ -43,7 +42,7 @@ public class Credentials {
 		try {
 			// Opening and Reading the file that contains the members' data
 			//File myObj = new File(credentialsDBSalome);
-			File myObj = new File(credentialsDBJaedon);
+			File myObj = new File(credentialsDB);
 			
 			Scanner myReader = new Scanner(myObj);
 			
