@@ -111,7 +111,11 @@ class MainScreen extends JFrame implements ActionListener {
 			uScreen.setVisible(true);
 			dispose();
 		} else if (source.equals(downButton)) {
-			
+			DownloadScreen dScreen = new DownloadScreen(firstName);
+			dScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			dScreen.pack();
+			dScreen.setVisible(true);
+			dispose();
 		} else if (source.equals(exitButton)) {
 			System.exit(-1);
 		}
