@@ -75,27 +75,29 @@ class MainScreen extends JFrame implements ActionListener {
 		setLayout(new GridBagLayout());
 		
 		layoutConst = new GridBagConstraints();
-		layoutConst.insets = new Insets(10, 10, 1, 1);
+		layoutConst.insets = new Insets(10, 10, 1, 10);
 		layoutConst.gridx = 0;
 		layoutConst.gridy = 0;
+		layoutConst.gridwidth = 2;
 		add(instructionLabel, layoutConst);
 		
 		layoutConst = new GridBagConstraints();
-		layoutConst.insets = new Insets(10, 10, 1, 1);
+		layoutConst.insets = new Insets(1, 10, 1, 1);
 		layoutConst.gridx = 0;
 		layoutConst.gridy = 1;
 		add(upButton, layoutConst);
 		
 		layoutConst = new GridBagConstraints();
-		layoutConst.insets = new Insets(10, 10, 1, 1);
+		layoutConst.insets = new Insets(1, 1, 1, 10);
 		layoutConst.gridx = 1;
 		layoutConst.gridy = 1;
 		add(downButton, layoutConst);
 		
 		layoutConst = new GridBagConstraints();
-		layoutConst.insets = new Insets(10, 10, 1, 1);
+		layoutConst.insets = new Insets(1, 10, 10, 10);
 		layoutConst.gridx = 0;
 		layoutConst.gridy = 2;
+		layoutConst.gridwidth = 2;
 		add(exitButton, layoutConst);
 		
 	}
