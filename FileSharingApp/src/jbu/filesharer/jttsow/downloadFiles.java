@@ -31,12 +31,12 @@ class DownloadScreen extends JFrame implements ActionListener {
 	
 	private String userName;
 	private String[] fileIDs;
+	private File userData;
 	
 	final static String fileDBPath = "..\\ServerSideDatabase\\Files";
 	final static String userDBPath = "..\\ServerSideDatabase\\Users";
 	
 	private boolean userOwnsFile(String selectedFile) throws FileNotFoundException {
-		File userData = new File(userDBPath + "\\" + userName + ".DAT");
 		Scanner scn = new Scanner(userData);
 		
 		// check the user's data for the file ID
@@ -45,6 +45,7 @@ class DownloadScreen extends JFrame implements ActionListener {
 			if (scn.nextLine().equals(selectedFile)) {
 				scn.close();
 				return true;
+				
 			}
 			
 		}
@@ -72,8 +73,10 @@ class DownloadScreen extends JFrame implements ActionListener {
 	}
 
 	public DownloadScreen(String userName) {
-		GridBagConstraints layoutConst = null;
 		this.userName = userName;
+		this.userData = new File(userDBPath + "\\" + userName + ".DAT");
+
+		GridBagConstraints layoutConst = null;
 		
 		setTitle("FileSharer: Download");
 		
@@ -86,7 +89,12 @@ class DownloadScreen extends JFrame implements ActionListener {
 		selectLabel = new JLabel("Select a file:");
 		balanceLabel = new JLabel("Balance:");
 		
-		balanceField = new JTextField();
+		try {
+			double cents = Double.parseDouble(getUserBalance()) * 0.01;
+			balanceField = new JTextField("$" + String.format("%.2f", cents));
+		} catch (Exception e) {
+			balanceField = new JTextField("0.00");
+		}
 		balanceField.setEditable(false);
 		
 		//TODO get data to populate table
@@ -113,6 +121,12 @@ class DownloadScreen extends JFrame implements ActionListener {
 		layoutConst.insets = new Insets(10, 10, 1, 1);
 		layoutConst.gridx = 0;
 		layoutConst.gridy = 0;
+		add(selectLabel, layoutConst);
+		
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(10, 10, 1, 1);
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 1;
 		layoutConst.gridheight = 4;
 		add(filePane, layoutConst);
 		
@@ -139,6 +153,15 @@ class DownloadScreen extends JFrame implements ActionListener {
 		layoutConst.gridx = 1;
 		layoutConst.gridy = 3;
 		add(backButton, layoutConst);
+		
+	}
+
+	private String getUserBalance() throws FileNotFoundException {
+		Scanner scn = new Scanner(userData);
+		String balance = scn.nextLine();
+		scn.close();
+		
+		return balance;
 		
 	}
 
