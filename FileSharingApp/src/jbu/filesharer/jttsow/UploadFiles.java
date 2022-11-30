@@ -36,7 +36,7 @@ class UploadScreen extends JFrame implements ActionListener {
 	
 	private File selectedFile;
 	private String uploaderName;
-	final static String fileDBPath = "M:\\FA2022\\Java\\Project\\ServerSideDatabase\\Files";
+	final static String fileDBPath = "..\\ServerSideDatabase\\Files";
 	final static String userDBPath = "..\\ServerSideDatabase\\Users";
 	
 	public UploadScreen(String uploaderName) {
