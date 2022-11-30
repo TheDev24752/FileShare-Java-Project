@@ -28,15 +28,49 @@ class DownloadScreen extends JFrame implements ActionListener {
 	private JTextField balanceField;
 	private JTable fileTable;
 	private JScrollPane filePane;
+	
 	private String userName;
+	private String[] fileIDs;
+	
 	final static String fileDBPath = "..\\ServerSideDatabase\\Files";
 	final static String userDBPath = "..\\ServerSideDatabase\\Users";
 	
-	private void download(int selectedRow) {
-		System.out.println(selectedRow);
+	private boolean userOwnsFile(String selectedFile) throws FileNotFoundException {
+		File userData = new File(userDBPath + "\\" + userName + ".DAT");
+		Scanner scn = new Scanner(userData);
+		
+		// check the user's data for the file ID
+		while (scn.hasNextLine()) {
+			// check the element for the file ID
+			if (scn.nextLine().equals(selectedFile)) {
+				scn.close();
+				return true;
+			}
+			
+		}
+		// the user's data contains no record of purchase
+		scn.close();
+		return false;
 		
 	}
 	
+	private void download(int selectedRow) {
+		String selectedFile = fileIDs[selectedRow];
+		
+		try {
+			System.out.println(userOwnsFile(selectedFile));
+			if (userOwnsFile(selectedFile)) {
+				// go ahead and download file
+			} else {
+				// go to purchase screen
+			}
+		} catch (FileNotFoundException e) {
+			// TODO notify user that the program had an error
+			return;
+		}
+		
+	}
+
 	public DownloadScreen(String userName) {
 		GridBagConstraints layoutConst = null;
 		this.userName = userName;
@@ -60,6 +94,8 @@ class DownloadScreen extends JFrame implements ActionListener {
 		fileTable = new JTable(getFileList(), columnNames);
 		fileTable.setDefaultEditor(Object.class, null);
 		fileTable.setSize(480, 120);
+		
+		// Double click support for more tech-y users
 		fileTable.addMouseListener(new MouseAdapter(){
 		    @Override
 		    public void mouseClicked(MouseEvent event){
@@ -120,11 +156,14 @@ class DownloadScreen extends JFrame implements ActionListener {
 		
 		// get list of .meta files
 		File[] fileList = fileDB.listFiles(filter);
+		fileIDs = new String[fileList.length];
 		String[][] fileSheet = new String[fileList.length][3];
 		
 		try {
 			for (int i = 0; i < fileList.length; i++) {
 				Scanner scr = new Scanner(fileList[i]);
+				String metaName = fileList[i].getName();
+				fileIDs[i] = metaName.substring(0, metaName.length() - 5);
 				for (int j = 0; j < 3; j++) {
 					// get each piece of info from the file and store it in fileSheet
 					String dataPoint = scr.nextLine();
