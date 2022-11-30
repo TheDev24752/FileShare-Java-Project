@@ -5,14 +5,15 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -35,7 +36,7 @@ class UploadScreen extends JFrame implements ActionListener {
 	private File selectedFile;
 	private String uploaderName;
 	final static String fileDBPath = "M:\\FA2022\\Java\\Project\\ServerSideDatabase\\Files";
-	final static String userDBPath = "M:\\FA2022\\Java\\Project\\ServerSideDatabase\\Users";
+	final static String userDBPath = "..\\ServerSideDatabase\\Users";
 	
 	public UploadScreen(String uploaderName) {
 		this.uploaderName = uploaderName;
@@ -164,7 +165,8 @@ class UploadScreen extends JFrame implements ActionListener {
 	}
 	
 	public void uploadFile(String uploader, String newName) throws IOException {
-		String newPath = fileDBPath + "\\" + uploader + "-" + newName;
+		String fileID = uploader + "-" + newName;
+		String newPath = fileDBPath + "\\" + fileID;
 		
 		// upload the file itself
 		File toUpload = new File(selectedFile.getAbsolutePath());
@@ -182,9 +184,11 @@ class UploadScreen extends JFrame implements ActionListener {
 		ms.write(metadataInfo.getBytes());
 		ms.close();
 		
-		File userData = new File(userDBPath + "\\" + uploaderName + ".DAT");
-		int fileValue = (int) (Integer.parseInt(sizeField.getText()) * 0.001); //1 cent per kB
-		addMoney(userData, fileValue);
+		int fileValue = (int) (Integer.parseInt(sizeField.getText()) * 0.001); //1 cent per kb
+		if (fileValue > 100) {
+			fileValue = 100; // cap price at 100 cents
+		}
+		addMoney(userDBPath + "\\" + uploaderName + ".DAT", fileValue, fileID);
 	}
 
 	private void upload(File toUpload, File uploaded) throws FileNotFoundException, IOException {
@@ -206,12 +210,32 @@ class UploadScreen extends JFrame implements ActionListener {
 	    
 	}
 	
-	private void addMoney(File data, int increase) throws FileNotFoundException {
-		Scanner dataIn = new Scanner(data);
-		FileOutputStream dataOut = new FileOutputStream(data);
-		
-		String balance = dataIn.nextLine();
-		System.out.println(balance);
+	private void addMoney(String dataPath, int increase, String newFileName) throws IOException {
+		BufferedReader dataIn = new BufferedReader(new FileReader(dataPath));
+        StringBuffer inputBuffer = new StringBuffer();
+        
+        // get, increase, and save the users balance
+        String line = dataIn.readLine();
+        Integer balance = Integer.parseInt(line);
+		balance += increase;
+		line = balance.toString();
+		inputBuffer.append(line + "\r\n");
+
+        // save the currently owned files
+        while ((line = dataIn.readLine()) != null) { 
+            inputBuffer.append(line);
+            inputBuffer.append("\r\n");
+        }
+        
+        // append the new file
+        inputBuffer.append(newFileName);
+        dataIn.close();
+
+        // write the data file
+        FileOutputStream fileOut = new FileOutputStream(dataPath);
+        fileOut.write(inputBuffer.toString().getBytes());
+        fileOut.close();
 		
 	}
+
 }
