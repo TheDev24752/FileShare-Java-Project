@@ -16,11 +16,12 @@ import java.util.Scanner;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 public class Credentials {
-	final static String credentialsDB = "M:\\JAVA PROJECTS\\FileShare-Java-Project\\ServerSideDatabase\\Credentials.txt";
+	final static String credentialsDB = "..\\ServerSideDatabase\\Credentials.txt";
 	String name;
 	String password;
 	String email;
@@ -44,7 +45,9 @@ public class Credentials {
 	static boolean loadCredentials(String name, String password) {
 		try {
 			// Opening and Reading the file that contains the members' data
+			//File myObj = new File(credentialsDBSalome);
 			File myObj = new File(credentialsDB);
+			
 			Scanner myReader = new Scanner(myObj);
 			
 			// Reading each line and splitting the data and storing it into an array
@@ -52,9 +55,6 @@ public class Credentials {
 				// itemize the data
 				String data = myReader.nextLine();
 				String[] arrOfStr = data.split("/", 3);
-				
-				System.out.println(arrOfStr[1].equals(password));
-				System.out.println(arrOfStr[0].equals(name));
 				
 				// check if the user's input matches an entry in the database; will skip if the data is wrong
 				//int acct_pwd = Integer.parseInt(arrOfStr[1]);
@@ -65,16 +65,14 @@ public class Credentials {
 					user = new Credentials(arrOfStr[0], arrOfStr[1], arrOfStr[2]);
 					myReader.close();
 				
-					System.out.println("Found!!" + arrOfStr[0]+ arrOfStr[1]+ arrOfStr[2]);
 					return true;
 				}
+				
 			}
-			System.out.println("The entered username or password is wrong; try again.");
 			myReader.close();
 			return false;
 
 		} catch (FileNotFoundException e) {
-			System.out.println("An error occurred.");
 			e.printStackTrace();
 			return false;
 		}
@@ -84,13 +82,13 @@ public class Credentials {
 	static boolean signUp(String name, String password) {
 		String email;
 		Scanner scnr = new Scanner(System.in);
+		System.out.println("Please, enter your email address:");
+		email = scnr.next();
 		try{
 			FileWriter fw = new FileWriter(credentialsDB, true);
-			fw.write('\n' +name + "/ + password");
+			fw.write('\n' +name + "/" + password + "/" + email);
 			fw.close();
 			
-			System.out.println("Please, enter your email address:");
-			email = scnr.next();
 			System.out.println("You're all set!!");
 			user = new Credentials(name, password, email);
 			return true;
@@ -173,8 +171,6 @@ class LogInScreen extends JFrame implements ActionListener{
 		layoutConst.gridx = 1;
 		layoutConst.gridy = 2;
 		add(signUpButton, layoutConst);
-		
-		System.out.println("test");
 	}
 
 	@Override
@@ -188,6 +184,15 @@ class LogInScreen extends JFrame implements ActionListener{
 		password = String.valueOf(passwordField.getPassword());
 		if (source.equals(logInButton)) {
 			loggedIn = Credentials.loadCredentials(username, password);
+			if (loggedIn) {
+				MainScreen wScreen = new MainScreen(username);
+				wScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				wScreen.pack();
+				wScreen.setVisible(true);
+				dispose();
+			} else {
+				JOptionPane.showMessageDialog(this, "The username or password is incorrect.", "login", JOptionPane.WARNING_MESSAGE);
+			}
 		} else if (source.equals(signUpButton)) {
 			loggedIn = Credentials.signUp(username, password);
 			
