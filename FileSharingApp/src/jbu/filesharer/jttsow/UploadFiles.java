@@ -5,12 +5,10 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -26,7 +24,6 @@ class UploadScreen extends JFrame implements ActionListener {
 	private static final long serialVersionUID = -5514543526666232652L;
 	private JButton selectButton;
 	private JButton uploadButton;
-	private JButton backButton;
 	private JLabel nameLabel;
 	private JLabel sizeLabel;
 	private JLabel descLabel;
@@ -37,8 +34,7 @@ class UploadScreen extends JFrame implements ActionListener {
 	
 	private File selectedFile;
 	private String uploaderName;
-	final static String fileDBPath = "..\\ServerSideDatabase\\Files";
-	final static String userDBPath = "..\\ServerSideDatabase\\Users";
+	final static String fileDBPath = "M:\\FA2022\\Java\\Project\\ServerSideDatabase\\Files";
 	
 	public UploadScreen(String uploaderName) {
 		this.uploaderName = uploaderName;
@@ -52,10 +48,6 @@ class UploadScreen extends JFrame implements ActionListener {
 		uploadButton = new JButton("Upload");
 		uploadButton.setEnabled(false);
 		uploadButton.addActionListener(this);
-		
-		backButton = new JButton("Back");
-		backButton.setEnabled(true);
-		backButton.addActionListener(this);
 		
 		nameLabel = new JLabel("File name:");
 		sizeLabel = new JLabel("File size:");
@@ -125,12 +117,6 @@ class UploadScreen extends JFrame implements ActionListener {
 		
 		layoutConst = new GridBagConstraints();
 		layoutConst.insets = new Insets(10, 10, 1, 1);
-		layoutConst.gridx = 0;
-		layoutConst.gridy = 4;
-		add(backButton, layoutConst);
-		
-		layoutConst = new GridBagConstraints();
-		layoutConst.insets = new Insets(10, 10, 1, 1);
 		layoutConst.gridx = 1;
 		layoutConst.gridy = 4;
 		add(uploadButton, layoutConst);
@@ -162,8 +148,7 @@ class UploadScreen extends JFrame implements ActionListener {
 		} else if (source.equals(uploadButton)) {
 			try {
 				// TODO regex banned characters. use https://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html
-				// TODO check for files that already exist in systems
-				uploadFile(uploaderName, nameField.getText());				
+				uploadFile(uploaderName, nameField.getText());
 				
 				MainScreen wScreen = new MainScreen(uploaderName);
 				wScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -173,19 +158,12 @@ class UploadScreen extends JFrame implements ActionListener {
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-		} else if (source.equals(backButton)) {
-			MainScreen wScreen = new MainScreen(uploaderName);
-			wScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			wScreen.pack();
-			wScreen.setVisible(true);
-			dispose();
 		}
 		
 	}
 	
 	public void uploadFile(String uploader, String newName) throws IOException {
-		String fileID = uploader + "-" + newName;
-		String newPath = fileDBPath + "\\" + fileID;
+		String newPath = fileDBPath + "\\" + uploader + "-" + newName;
 		
 		// upload the file itself
 		File toUpload = new File(selectedFile.getAbsolutePath());
@@ -202,12 +180,6 @@ class UploadScreen extends JFrame implements ActionListener {
 				descField.getText();
 		ms.write(metadataInfo.getBytes());
 		ms.close();
-		
-		int fileValue = (int) (Integer.parseInt(sizeField.getText()) * 0.001); //1 cent per kb
-		if (fileValue > 100) {
-			fileValue = 100; // cap price at 100 cents
-		}
-		addMoney(userDBPath + "\\" + uploaderName + ".DAT", fileValue, fileID);
 	}
 
 	private void upload(File toUpload, File uploaded) throws FileNotFoundException, IOException {
@@ -229,32 +201,4 @@ class UploadScreen extends JFrame implements ActionListener {
 	    
 	}
 	
-	private void addMoney(String dataPath, int increase, String newFileName) throws IOException {
-		BufferedReader dataIn = new BufferedReader(new FileReader(dataPath));
-        StringBuffer inputBuffer = new StringBuffer();
-        
-        // get, increase, and save the users balance
-        String line = dataIn.readLine();
-        Integer balance = Integer.parseInt(line);
-		balance += increase;
-		line = balance.toString();
-		inputBuffer.append(line + "\r\n");
-
-        // save the currently owned files
-        while ((line = dataIn.readLine()) != null) { 
-            inputBuffer.append(line);
-            inputBuffer.append("\r\n");
-        }
-        
-        // append the new file
-        inputBuffer.append(newFileName);
-        dataIn.close();
-
-        // write the data file
-        FileOutputStream fileOut = new FileOutputStream(dataPath);
-        fileOut.write(inputBuffer.toString().getBytes());
-        fileOut.close();
-		
-	}
-
 }
