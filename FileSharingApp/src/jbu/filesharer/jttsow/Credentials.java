@@ -5,8 +5,12 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 import javax.swing.JButton;
@@ -55,7 +59,7 @@ public class Credentials {
 				// check if the user's input matches an entry in the database; will skip if the data is wrong
 				//int acct_pwd = Integer.parseInt(arrOfStr[1]);
 				if (!arrOfStr[0].equals(name) || !arrOfStr[1].equals(password)) {
-					System.out.println("In the check.");
+					System.out.println("Hang on.");
 				} else {
 					// build the Credentials object; user found
 					user = new Credentials(arrOfStr[0], arrOfStr[1], arrOfStr[2]);
@@ -74,6 +78,27 @@ public class Credentials {
 			e.printStackTrace();
 			return false;
 		}
+	}
+	
+	// Sign up function
+	static boolean signUp(String name, String password) {
+		String email;
+		Scanner scnr = new Scanner(System.in);
+		try{
+			FileWriter fw = new FileWriter(credentialsDB, true);
+			fw.write('\n' +name + "/ + password");
+			fw.close();
+			
+			System.out.println("Please, enter your email address:");
+			email = scnr.next();
+			System.out.println("You're all set!!");
+			user = new Credentials(name, password, email);
+			return true;
+		} catch (IOException i) {
+			System.out.println("An error occured.");
+			return false;
+		}
+		
 	}
 }
 
@@ -164,6 +189,7 @@ class LogInScreen extends JFrame implements ActionListener{
 		if (source.equals(logInButton)) {
 			loggedIn = Credentials.loadCredentials(username, password);
 		} else if (source.equals(signUpButton)) {
+			loggedIn = Credentials.signUp(username, password);
 			
 		}
 		
