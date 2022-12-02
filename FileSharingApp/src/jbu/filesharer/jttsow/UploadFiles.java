@@ -23,6 +23,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 class UploadScreen extends JFrame implements ActionListener {
+	private static final long serialVersionUID = -5514543526666232652L;
 	private JButton selectButton;
 	private JButton uploadButton;
 	private JButton backButton;

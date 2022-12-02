@@ -5,8 +5,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Scanner;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,35 +12,16 @@ import javax.swing.JLabel;
 public class Main {
 	// TODO get UI to do the path stuff
 	static String filePath;
-	final static String testFile = "F:\\smile.bmp";
 	
 	// Main Class
 	public static void main(String[] args) {
-	    Scanner scnr = new Scanner(System.in); 
-		boolean loggedIn = false;
-		String firstName;
+		// ironically, the welcome window (main.java) is loaded second
+		LogInScreen myFrame = new LogInScreen();
 		
-		do {
-			firstName = ask("what is your first name?", scnr);
-			String lastName = ask("what is your last name?", scnr);
-			String password = ask("what is your password?", scnr);
-			
-			
-			loggedIn = Credentials.loadCredentials(firstName, password);
-		} while (!loggedIn);
-	    System.out.println("Yay!!! You're logged in.");
-		System.out.println("your email is: " + Credentials.user.email);
+		myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		myFrame.pack();
+		myFrame.setVisible(true);
 		
-		MainScreen wScreen = new MainScreen(firstName);
-		wScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		wScreen.pack();
-		wScreen.setVisible(true);
-		
-	}
-	
-	public static String ask(String q, Scanner scan) {
-		System.out.println(q);
-		return scan.nextLine();
 	}
 
 }

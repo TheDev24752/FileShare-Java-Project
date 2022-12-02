@@ -75,6 +75,7 @@ public class Credentials {
 }
 
 class LogInScreen extends JFrame implements ActionListener{
+	private static final long serialVersionUID = 2394667733742689013L;
 	private JButton logInButton;
 	private JButton signUpButton;
 	private JLabel usernameLabel;

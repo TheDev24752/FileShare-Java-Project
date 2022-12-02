@@ -19,6 +19,48 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+class FileData {
+	private String fileName;
+	private String uploader;
+	private String size;
+	private String description;
+	
+	public FileData(String fileName, String uploader, String size, String description) {
+		this.fileName = fileName;
+		this.uploader = uploader;
+		this.size = size;
+		this.description = description;
+	}
+	
+	public int sizeVal() {
+		int val = Integer.parseInt(size);
+		return val;
+	}
+	
+	public String getSize() { return size; }
+	
+	public String getID() { return uploader + "-" + fileName; }
+	
+	public String getName() { return fileName; }
+	
+	public String metaName() { return getID() + ".meta"; }
+	
+	public String getUploader()	{ return uploader; }
+	
+	public String getDesc() { return description; }
+	
+	public Double cost() { return cost(sizeVal()); }
+	
+	public static Double cost(int size) {
+		double cost = size * .00003;
+		if (cost > 3.0)
+			return 3.0;
+		else {
+			return cost;
+		}
+	}
+}
+
 class DownloadScreen extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 9199623328253410778L;
 	private JButton downloadButton;
@@ -30,15 +72,15 @@ class DownloadScreen extends JFrame implements ActionListener {
 	private JScrollPane filePane;
 	
 	private String userName;
-	private String[] fileIDs;
+	private FileData[] files;
 	private File userData;
+	private Double userBalance;
 	
 	final static String fileDBPath = "..\\ServerSideDatabase\\Files";
 	final static String userDBPath = "..\\ServerSideDatabase\\Users";
 	
 	private boolean userOwnsFile(String selectedFile) throws FileNotFoundException {
 		Scanner scn = new Scanner(userData);
-		
 		// check the user's data for the file ID
 		while (scn.hasNextLine()) {
 			// check the element for the file ID
@@ -56,14 +98,21 @@ class DownloadScreen extends JFrame implements ActionListener {
 	}
 	
 	private void download(int selectedRow) {
-		String selectedFile = fileIDs[selectedRow];
+		FileData file = files[selectedRow];
+		String selectedFileID = file.getID();
 		
 		try {
-			System.out.println(userOwnsFile(selectedFile));
-			if (userOwnsFile(selectedFile)) {
+			System.out.println(userOwnsFile(selectedFileID));
+			if (userOwnsFile(selectedFileID)) {
 				// go ahead and download file
 			} else {
-				// go to purchase screen
+				PurchaseScreen pScreen = new PurchaseScreen(userDBPath + "\\" + userName + ".DAT",
+						file.cost(),
+						userBalance,
+						file.getDesc());
+				pScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				pScreen.pack();
+				pScreen.setVisible(true);
 			}
 		} catch (FileNotFoundException e) {
 			// TODO notify user that the program had an error
@@ -90,8 +139,8 @@ class DownloadScreen extends JFrame implements ActionListener {
 		balanceLabel = new JLabel("Balance:");
 		
 		try {
-			double cents = Double.parseDouble(getUserBalance()) * 0.01;
-			balanceField = new JTextField("$" + String.format("%.2f", cents));
+			userBalance = Double.parseDouble(getUserBalance()) * 0.01;
+			balanceField = new JTextField("$" + String.format("%.2f", userBalance));
 		} catch (Exception e) {
 			balanceField = new JTextField("0.00");
 		}
@@ -179,24 +228,34 @@ class DownloadScreen extends JFrame implements ActionListener {
 		
 		// get list of .meta files
 		File[] fileList = fileDB.listFiles(filter);
-		fileIDs = new String[fileList.length];
+		files = new FileData[fileList.length];
 		String[][] fileSheet = new String[fileList.length][3];
 		
 		try {
 			for (int i = 0; i < fileList.length; i++) {
 				Scanner scr = new Scanner(fileList[i]);
-				String metaName = fileList[i].getName();
-				fileIDs[i] = metaName.substring(0, metaName.length() - 5);
-				for (int j = 0; j < 3; j++) {
-					// get each piece of info from the file and store it in fileSheet
+				String desc = new String();
+				int j = 0;
+				Integer size = 1;
+				while (scr.hasNextLine()) {
+					// get each piece of info from the file and store it
 					String dataPoint = scr.nextLine();
-					if (j == 2) {
+					if (j < 2) {
+						fileSheet[i][j] = dataPoint;
+					} else if (j == 2) {
 						// cap the cost to $3 @ .3 cents a kB; also, convert it to dollars
-						double cost = Math.min(Integer.parseInt(dataPoint) * .00003, 3.0);
-						dataPoint = String.format("%.2f", cost);
+						size = Integer.parseInt(dataPoint);
+						double cost = FileData.cost(size);
+						dataPoint = "$" + String.format("%.2f", cost);
+						fileSheet[i][j] = dataPoint;
+					} else {
+						desc += dataPoint;
 					}
-					fileSheet[i][j] = dataPoint;
+					
+					j++;
 				}
+				System.out.println(size);
+				files[i] = new FileData(fileSheet[i][0], fileSheet[i][1], size.toString(), desc);
 				scr.close();
 			} 
 			
@@ -221,6 +280,7 @@ class DownloadScreen extends JFrame implements ActionListener {
 			wScreen.setVisible(true);
 			dispose();
 		}
+		
 	}
 	
 }
