@@ -134,7 +134,6 @@ class UploadScreen extends JFrame implements ActionListener {
 		layoutConst.gridx = 1;
 		layoutConst.gridy = 4;
 		add(uploadButton, layoutConst);
-		
 	}
 	
 	@Override
@@ -158,7 +157,6 @@ class UploadScreen extends JFrame implements ActionListener {
                 
                 uploadButton.setEnabled(true);
             }
-			
 		} else if (source.equals(uploadButton)) {
 			try {
 				uploadFile(uploaderName, nameField.getText());				
@@ -178,7 +176,6 @@ class UploadScreen extends JFrame implements ActionListener {
 			wScreen.setVisible(true);
 			dispose();
 		}
-		
 	}
 	
 	public void uploadFile(String uploader, String newName) throws IOException {
@@ -224,7 +221,6 @@ class UploadScreen extends JFrame implements ActionListener {
 	        is.close();
 	        os.close();
 	    }
-	    
 	}
 	
 	private void addMoney(String dataPath, int increase, String newFileName) throws IOException {
@@ -252,7 +248,5 @@ class UploadScreen extends JFrame implements ActionListener {
         FileOutputStream fileOut = new FileOutputStream(dataPath);
         fileOut.write(inputBuffer.toString().getBytes());
         fileOut.close();
-		
 	}
-
 }

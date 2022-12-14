@@ -119,10 +119,9 @@ class DownloadScreen extends JFrame implements ActionListener {
 				dispose();
 			}
 		} catch (FileNotFoundException e) {
-			// TODO notify user that the program had an error
+			e.printStackTrace();
 			return;
 		}
-		
 	}
 
 	private void downloadAlreadyOwnedFile(FileData file) {
@@ -166,7 +165,6 @@ class DownloadScreen extends JFrame implements ActionListener {
 		}
 		balanceField.setEditable(false);
 		
-		//TODO get data to populate table
 		String[] columnNames = {"Name", "Uploader", "Cost"};
 		fileTable = new JTable(getFileList(), columnNames);
 		fileTable.setDefaultEditor(Object.class, null);
@@ -231,7 +229,6 @@ class DownloadScreen extends JFrame implements ActionListener {
 		scn.close();
 		
 		return balance;
-		
 	}
 
 	private String[][] getFileList() {
@@ -282,7 +279,6 @@ class DownloadScreen extends JFrame implements ActionListener {
 			String[][] error = {{"error", "connection to file database failed", ""}};
 			return error;
 		}
-		
 		return fileSheet;
 	}
 
@@ -299,7 +295,5 @@ class DownloadScreen extends JFrame implements ActionListener {
 			wScreen.setVisible(true);
 			dispose();
 		}
-		
 	}
-	
 }

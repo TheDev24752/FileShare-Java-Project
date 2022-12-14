@@ -64,11 +64,9 @@ public class Credentials {
 				
 					return true;
 				}
-				
 			}
 			myReader.close();
 			return false;
-
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return false;
@@ -166,7 +164,6 @@ class LogInScreen extends JFrame implements ActionListener{
 		else if (source.equals(signUpButton)) {
 			createUser(username, password);
 		}
-		
 	}
 
 	private void createUser(String username, String password) {
@@ -198,7 +195,6 @@ class LogInScreen extends JFrame implements ActionListener{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 	}
 
 	private void tryLogIn(String username, String password) {

@@ -13,7 +13,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
@@ -189,7 +188,6 @@ class PurchaseScreen extends JFrame implements ActionListener{
 		layoutConst.gridx = 1;
 		layoutConst.gridy = 7;
 		add(buyButton, layoutConst);
-		
 	}
 	
 	private void takeMoney(String dataPath, int decrease, String newFileName) throws IOException {
@@ -217,7 +215,6 @@ class PurchaseScreen extends JFrame implements ActionListener{
         FileOutputStream fileOut = new FileOutputStream(dataPath);
         fileOut.write(inputBuffer.toString().getBytes());
         fileOut.close();
-		
 	}
 
 	@Override
@@ -260,7 +257,6 @@ class PurchaseScreen extends JFrame implements ActionListener{
 	    } catch (IOException e) {
 			e.printStackTrace();
 		}
-	    
 	}
 
 	private void makePurchase() {
@@ -287,4 +283,3 @@ class PurchaseScreen extends JFrame implements ActionListener{
 	    return formatter;
 	}
 }
-

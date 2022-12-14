@@ -9,20 +9,15 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 public class Main {
-	// TODO get UI to do the path stuff
 	static String filePath;
-	final static String testFile = "F:\\smile.bmp";
 	
 	// Main Class
 	public static void main(String[] args) {
-LogInScreen myFrame = new LogInScreen();
-		
+		LogInScreen myFrame = new LogInScreen();
 		myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		myFrame.pack();
-		myFrame.setVisible(true);
-		
+		myFrame.setVisible(true);	
 	}
-	
 }
 
 class MainScreen extends JFrame implements ActionListener {
@@ -81,8 +76,8 @@ class MainScreen extends JFrame implements ActionListener {
 		layoutConst.gridy = 2;
 		layoutConst.gridwidth = 2;
 		add(exitButton, layoutConst);
-
 	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
@@ -103,5 +98,4 @@ class MainScreen extends JFrame implements ActionListener {
 			System.exit(-1);
 		}
 	}
-	
 }
