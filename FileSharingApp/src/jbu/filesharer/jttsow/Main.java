@@ -1,12 +1,9 @@
 package jbu.filesharer.jttsow;
-
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Scanner;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -18,33 +15,14 @@ public class Main {
 	
 	// Main Class
 	public static void main(String[] args) {
-	    Scanner scnr = new Scanner(System.in); 
-		boolean loggedIn = false;
-		String firstName;
+LogInScreen myFrame = new LogInScreen();
 		
-		do {
-			firstName = ask("what is your first name?", scnr);
-			String lastName = ask("what is your last name?", scnr);
-			String password = ask("what is your password?", scnr);
-			
-			
-			loggedIn = Credentials.loadCredentials(firstName, password);
-		} while (!loggedIn);
-	    System.out.println("Yay!!! You're logged in.");
-		System.out.println("your email is: " + Credentials.user.email);
-		
-		MainScreen wScreen = new MainScreen(firstName);
-		wScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		wScreen.pack();
-		wScreen.setVisible(true);
+		myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		myFrame.pack();
+		myFrame.setVisible(true);
 		
 	}
 	
-	public static String ask(String q, Scanner scan) {
-		System.out.println(q);
-		return scan.nextLine();
-	}
-
 }
 
 class MainScreen extends JFrame implements ActionListener {
@@ -73,35 +51,38 @@ class MainScreen extends JFrame implements ActionListener {
 		instructionLabel = new JLabel("Hello! Are we uploading or downloading?");
 		
 		setLayout(new GridBagLayout());
-		
+
 		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(10, 10, 1, 1);
 		layoutConst.insets = new Insets(10, 10, 1, 10);
 		layoutConst.gridx = 0;
 		layoutConst.gridy = 0;
 		layoutConst.gridwidth = 2;
 		add(instructionLabel, layoutConst);
-		
+
 		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(10, 10, 1, 1);
 		layoutConst.insets = new Insets(1, 10, 1, 1);
 		layoutConst.gridx = 0;
 		layoutConst.gridy = 1;
 		add(upButton, layoutConst);
-		
+
 		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(10, 10, 1, 1);
 		layoutConst.insets = new Insets(1, 1, 1, 10);
 		layoutConst.gridx = 1;
 		layoutConst.gridy = 1;
 		add(downButton, layoutConst);
-		
+
 		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(10, 10, 1, 1);
 		layoutConst.insets = new Insets(1, 10, 10, 10);
 		layoutConst.gridx = 0;
 		layoutConst.gridy = 2;
 		layoutConst.gridwidth = 2;
 		add(exitButton, layoutConst);
-		
-	}
 
+	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();

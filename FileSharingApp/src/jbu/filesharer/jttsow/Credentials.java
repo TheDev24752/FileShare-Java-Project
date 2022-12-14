@@ -7,6 +7,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Scanner;
 
 import javax.swing.JButton;
@@ -17,25 +22,21 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 public class Credentials {
-	//final static String credentialsDBSalome = "M:\\JAVA PROJECTS\\FileShare-Java-Project\\ServerSideDatabase\\Credentials.txt";
-	final static String credentialsDBJaedon = "M:\\FA2022\\Java\\Project\\ServerSideDatabase\\Credentials.txt";
+	final static String credentialsDB = "..\\ServerSideDatabase\\Credentials.txt";
 	String name;
 	String password;
-	String email;
 	public static Credentials user;
 
 	// Default Constructor
 	public Credentials() {
 		this.name = "";
 		this.password = "";
-		this.email = "";
 	}
 
 	// Constructor
-	public Credentials(String name, String password, String email) {
+	public Credentials(String name, String password) {
 		this.name = name;
 		this.password = password;
-		this.email = email;
 	}
 
   //Log in function
@@ -43,7 +44,7 @@ public class Credentials {
 		try {
 			// Opening and Reading the file that contains the members' data
 			//File myObj = new File(credentialsDBSalome);
-			File myObj = new File(credentialsDBJaedon);
+			File myObj = new File(credentialsDB);
 			
 			Scanner myReader = new Scanner(myObj);
 			
@@ -51,14 +52,14 @@ public class Credentials {
 			while (myReader.hasNextLine()) {
 				// itemize the data
 				String data = myReader.nextLine();
-				String[] arrOfStr = data.split("/", 3);
+				String[] arrOfStr = data.split("/", 2);
 				
 				// check if the user's input matches an entry in the database; will skip if the data is wrong
 				//int acct_pwd = Integer.parseInt(arrOfStr[1]);
 				if (!arrOfStr[0].equals(name) || !arrOfStr[1].equals(password)) {
 				} else {
 					// build the Credentials object; user found
-					user = new Credentials(arrOfStr[0], arrOfStr[1], arrOfStr[2]);
+					user = new Credentials(arrOfStr[0], arrOfStr[1]);
 					myReader.close();
 				
 					return true;
@@ -76,12 +77,16 @@ public class Credentials {
 }
 
 class LogInScreen extends JFrame implements ActionListener{
+	private static final long serialVersionUID = 2394667733742689013L;
 	private JButton logInButton;
 	private JButton signUpButton;
 	private JLabel usernameLabel;
 	private JLabel passwordLabel;
 	private JTextField usernameField;
 	private JPasswordField  passwordField;
+	
+	final static String userDBPath = "..\\ServerSideDatabase\\Users\\";
+	final static String credentialsDB = "..\\ServerSideDatabase\\Credentials.txt";
 	
 	public LogInScreen() {
 		GridBagConstraints layoutConst = null;
@@ -151,27 +156,63 @@ class LogInScreen extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		Object source = event.getSource();
-		boolean loggedIn = false;
 		String username;
 		String password;
 		
 		username = usernameField.getText();
 		password = String.valueOf(passwordField.getPassword());
-		if (source.equals(logInButton)) {
-			loggedIn = Credentials.loadCredentials(username, password);
-			if (loggedIn) {
-				MainScreen wScreen = new MainScreen(username);
-				wScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				wScreen.pack();
-				wScreen.setVisible(true);
-				dispose();
-			} else {
-				JOptionPane.showMessageDialog(this, "The username or password is incorrect.", "login", JOptionPane.WARNING_MESSAGE);
-			}
-		} else if (source.equals(signUpButton)) {
-			
+		if (source.equals(logInButton))
+			tryLogIn(username, password);
+		else if (source.equals(signUpButton)) {
+			createUser(username, password);
 		}
 		
+	}
+
+	private void createUser(String username, String password) {
+		// check if the username exists
+		File credentialsFile = new File(credentialsDB);
+		
+		try (Scanner scr = new Scanner(credentialsFile)) {
+			while (scr.hasNextLine()) {
+				String usernameTest = scr.nextLine().split("/", 2)[0];
+				if (usernameTest.equals(username)) {
+					JOptionPane.showMessageDialog(this, "Username already exists.",
+						"Error",
+						JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+			}
+			// add to credentials file
+			Files.write(credentialsFile.toPath(),
+					("\r\n" + username + "/" + password).getBytes(),
+					StandardOpenOption.APPEND);
+			// create user data file
+			Path newUserDataPath = Paths.get(userDBPath + username + ".DAT");
+			Files.write(newUserDataPath,
+					"100".getBytes(),
+					StandardOpenOption.CREATE);
+			JOptionPane.showMessageDialog(this, "User created.",
+					"Success",
+					JOptionPane.INFORMATION_MESSAGE);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	private void tryLogIn(String username, String password) {
+		boolean loggedIn;
+		loggedIn = Credentials.loadCredentials(username, password);
+		if (loggedIn) {
+			MainScreen wScreen = new MainScreen(username);
+			wScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			wScreen.pack();
+			wScreen.setVisible(true);
+			dispose();
+		} else {
+			JOptionPane.showMessageDialog(this, "The username or password is incorrect.", "login", JOptionPane.WARNING_MESSAGE);
+		}
 	}
 	
 	public static void main(String[] args) {

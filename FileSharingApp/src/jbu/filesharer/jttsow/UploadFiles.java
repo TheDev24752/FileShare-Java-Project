@@ -23,6 +23,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 class UploadScreen extends JFrame implements ActionListener {
+	private static final long serialVersionUID = -5514543526666232652L;
 	private JButton selectButton;
 	private JButton uploadButton;
 	private JButton backButton;
@@ -160,8 +161,6 @@ class UploadScreen extends JFrame implements ActionListener {
 			
 		} else if (source.equals(uploadButton)) {
 			try {
-				// TODO regex banned characters. use https://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html
-				// TODO check for files that already exist in systems
 				uploadFile(uploaderName, nameField.getText());				
 				
 				MainScreen wScreen = new MainScreen(uploaderName);
